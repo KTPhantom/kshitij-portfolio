@@ -1,5 +1,6 @@
 import { useCockpitStore } from "@/store/useCockpitStore";
 import BootSequence from "@/components/hud/BootSequence";
+import CockpitBackground from "@/components/hud/CockpitBackground";
 import CockpitScene from "@/components/scenes/CockpitScene";
 import HUDOverlay from "@/components/hud/HUDOverlay";
 import SectionPanel from "@/components/hud/SectionPanel";
@@ -10,8 +11,11 @@ export default function Portfolio() {
   const { isBooting } = useCockpitStore();
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-[#050810] overflow-hidden font-sans select-none">
-      {/* 3D atmospheric background */}
+    <div className="fixed inset-0 w-full h-full overflow-hidden font-sans select-none">
+      {/* CSS cockpit background — always visible */}
+      <CockpitBackground />
+
+      {/* 3D atmospheric layer on top (bonus if WebGL available) */}
       <CockpitScene />
 
       {/* HUD + controls (post-boot only) */}
