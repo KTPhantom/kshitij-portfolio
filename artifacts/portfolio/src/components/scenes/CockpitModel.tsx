@@ -1,55 +1,87 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import type { Group } from "three";
 
 useGLTF.preload("/cockpit.glb");
 
 export default function CockpitModel() {
   const { scene } = useGLTF("/cockpit.glb");
-  const groupRef = useRef<Group>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
-    if (!scene) return;
+    if (!scene || !groupRef.current) return;
 
+    const group = groupRef.current;
+
+    // ── 1. Compute bounds of the raw scene ──────────────────────────
+    const box = new THREE.Box3().setFromObject(scene);
+    const center = new THREE.Vector3();
+    const size = new THREE.Vector3();
+    box.getCenter(center);
+    box.getSize(size);
+
+    // ── 2. Scale so the largest dimension = 5 units ─────────────────
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const targetSize = 5;
+    const s = targetSize / maxDim;
+    group.scale.setScalar(s);
+
+    // ── 3. Centre the model at world origin ─────────────────────────
+    group.position.set(
+      -center.x * s,
+      -center.y * s,
+      -center.z * s
+    );
+
+    // ── 4. Enhance materials ─────────────────────────────────────────
     scene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+      if (!(child as THREE.Mesh).isMesh) return;
+      const mesh = child as THREE.Mesh;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
 
-        // Boost emissive on any screen/display materials
-        if (Array.isArray(mesh.material)) {
-          mesh.material.forEach((mat) => enhanceMaterial(mat));
-        } else if (mesh.material) {
-          enhanceMaterial(mesh.material as THREE.MeshStandardMaterial);
+      const mats = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
+
+      mats.forEach((mat) => {
+        if (!mat) return;
+        // Convert Lambert → Standard so we get PBR lighting
+        if ((mat as any).isMeshLambertMaterial) {
+          const lam = mat as THREE.MeshLambertMaterial;
+          const std = new THREE.MeshStandardMaterial({
+            name: lam.name,
+            color: lam.color,
+            map: lam.map,
+            emissive: lam.emissive,
+            emissiveMap: lam.emissiveMap,
+            emissiveIntensity: lam.emissiveIntensity ?? 0,
+            transparent: lam.transparent,
+            opacity: lam.opacity,
+            side: lam.side,
+            roughness: 0.6,
+            metalness: 0.3,
+          });
+          if (Array.isArray(mesh.material)) {
+            const idx = mesh.material.indexOf(mat);
+            mesh.material[idx] = std;
+          } else {
+            mesh.material = std;
+          }
         }
-      }
+
+        // Boost any existing emissive (screen glow etc.)
+        const m = mat as THREE.MeshStandardMaterial;
+        if (m.emissiveIntensity > 0) {
+          m.emissiveIntensity = Math.min(m.emissiveIntensity * 2, 4);
+        }
+      });
     });
   }, [scene]);
 
   return (
     <group ref={groupRef}>
-      <primitive
-        object={scene}
-        scale={1}
-        position={[0, -1.2, 0]}
-        rotation={[0, Math.PI, 0]}
-      />
+      <primitive object={scene} />
     </group>
   );
-}
-
-function enhanceMaterial(mat: THREE.Material) {
-  const m = mat as THREE.MeshStandardMaterial;
-  if (!m.isMeshStandardMaterial) return;
-
-  // Darken non-emissive surfaces to match the cockpit theme
-  if (m.emissiveIntensity === 0 || !m.emissive) {
-    m.roughness = Math.max(m.roughness ?? 0.5, 0.4);
-  }
-  // Give any emissive elements a slight boost
-  if (m.emissiveIntensity > 0) {
-    m.emissiveIntensity = Math.min(m.emissiveIntensity * 1.4, 3);
-  }
 }
