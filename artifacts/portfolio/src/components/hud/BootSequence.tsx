@@ -8,21 +8,21 @@ export default function BootSequence() {
 
   useEffect(() => {
     const sequence = [
-      { time: 500, step: 1 },
-      { time: 1500, step: 2 },
-      { time: 2500, step: 3 },
-      { time: 3500, step: 4 },
-      { time: 4500, step: 5 },
-      { time: 5500, step: 6 },
-      { time: 6500, step: 7 },
-      { time: 7500, step: 8 },
+      { time: 200, step: 1 },
+      { time: 550, step: 2 },
+      { time: 900, step: 3 },
+      { time: 1250, step: 4 },
+      { time: 1600, step: 5 },
+      { time: 1950, step: 6 },
+      { time: 2300, step: 7 },
+      { time: 2650, step: 8 },
     ];
 
     const timeouts = sequence.map((s) => setTimeout(() => setStep(s.step), s.time));
 
     const endTimeout = setTimeout(() => {
       finishBoot();
-    }, 8000);
+    }, 3000);
 
     return () => {
       timeouts.forEach(clearTimeout);
@@ -33,9 +33,15 @@ export default function BootSequence() {
   return (
     <AnimatePresence>
       <motion.div 
-        className="fixed inset-0 z-[100] bg-black text-foreground font-mono p-8 flex flex-col justify-end pointer-events-none"
+        className="fixed inset-0 z-[100] bg-black text-foreground font-mono p-8 flex flex-col justify-end pointer-events-auto cursor-pointer select-none"
         exit={{ opacity: 0, transition: { duration: 0.5 } }}
+        onClick={finishBoot}
       >
+        {/* Skip indicator */}
+        <div className="absolute top-6 right-6 text-[8px] sm:text-[9px] font-mono text-green-500/40 animate-pulse uppercase tracking-widest">
+          [ CLICK ANYWHERE TO SKIP BOOT ]
+        </div>
+
         <div className="space-y-2 mb-8 max-w-2xl">
           {step >= 0 && step < 7 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center">
@@ -53,9 +59,9 @@ export default function BootSequence() {
                 <span>SYSTEM BOOT</span>
                 <span>100%</span>
               </div>
-              <div className="h-2 w-full bg-border">
+              <div className="h-2 w-full bg-green-950/30 border border-green-500/10">
                 <motion.div 
-                  className="h-full bg-foreground" 
+                  className="h-full bg-green-400 shadow-[0_0_8px_#00ff41]" 
                   initial={{ width: "0%" }} 
                   animate={{ width: "100%" }} 
                   transition={{ duration: 1 }} 
@@ -83,3 +89,4 @@ export default function BootSequence() {
     </AnimatePresence>
   );
 }
+

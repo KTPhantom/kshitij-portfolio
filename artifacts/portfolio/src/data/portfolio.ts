@@ -16,7 +16,7 @@ export const portfolio = {
     github: "github.com/KTPhantom",
     githubUrl: "https://github.com/KTPhantom",
     location: "Bhopal, India",
-    resumeUrl: "https://drive.google.com/file/d/YOUR_RESUME_FILE_ID/view",
+    resumeUrl: "https://drive.google.com/file/d/1vphX_N5spGKY7PhGRrBL6oNPCLhm63H2/view?usp=sharing",
   },
 
   education: {

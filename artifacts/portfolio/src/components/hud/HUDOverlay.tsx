@@ -260,7 +260,7 @@ export default function HUDOverlay() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.5 }}
-        className="absolute flex flex-col gap-6 items-start"
+        className="absolute hidden lg:flex flex-col gap-6 items-start"
         style={{ left: "14%", top: "15%" }}
       >
         <SpeedTape value={1470} />
@@ -272,7 +272,7 @@ export default function HUDOverlay() {
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.6 }}
-        className="absolute flex flex-col gap-6 items-end"
+        className="absolute hidden lg:flex flex-col gap-6 items-end"
         style={{ right: "14%", top: "15%" }}
       >
         <AltitudeTape value={35000} />
@@ -284,14 +284,14 @@ export default function HUDOverlay() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="absolute left-1/2 -translate-x-1/2"
+        className="absolute left-1/2 -translate-x-1/2 hidden md:block"
         style={{ top: "10%" }}
       >
         <HeadingTape />
       </motion.div>
 
       {/* ═══ CENTER ─ Targeting reticle ═══ */}
-      <div className="absolute inset-0 flex items-center justify-center" style={{ marginTop: "-6%" }}>
+      <div className="absolute inset-0 flex items-center justify-center hidden md:flex" style={{ marginTop: "-6%" }}>
         {/* Outer ring */}
         <div className="absolute w-40 h-40 rounded-full border border-green-500/10" />
         {/* Inner ring */}
@@ -317,7 +317,7 @@ export default function HUDOverlay() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
-        className="absolute flex flex-col gap-1.5"
+        className="absolute hidden lg:flex flex-col gap-1.5"
         style={{ left: "14%", bottom: "28%" }}
       >
         {[
@@ -345,7 +345,7 @@ export default function HUDOverlay() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.0 }}
-        className="absolute flex flex-col items-end gap-1 text-[8px] text-green-500/50"
+        className="absolute hidden lg:flex flex-col items-end gap-1 text-[8px] text-green-500/50"
         style={{ right: "14%", bottom: "28%" }}
       >
         <div>MISSION: <span className="text-amber-400/70">KTP-PORTFOLIO-01</span></div>
@@ -365,7 +365,7 @@ export default function HUDOverlay() {
       ))}
 
       {/* ═══ SIDE DATA STREAMS ═══ */}
-      <div className="absolute top-16 left-3 flex flex-col gap-0.5">
+      <div className="absolute top-16 left-3 hidden xl:flex flex-col gap-0.5">
         {["AI-ENGINE", "FULLSTACK", "ML-OPS", "CLOUD-SVC", "EMBEDDED"].map((s, i) => (
           <motion.div
             key={s}
@@ -379,7 +379,7 @@ export default function HUDOverlay() {
         ))}
       </div>
 
-      <div className="absolute top-16 right-3 flex flex-col items-end gap-0.5">
+      <div className="absolute top-16 right-3 hidden xl:flex flex-col items-end gap-0.5">
         {["REACT", "NODE", "PYTHON", "PYTORCH", "AWS"].map((s, i) => (
           <motion.div
             key={s}
@@ -392,6 +392,7 @@ export default function HUDOverlay() {
           </motion.div>
         ))}
       </div>
+
 
     </div>
   );

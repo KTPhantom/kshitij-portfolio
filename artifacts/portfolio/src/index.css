@@ -175,3 +175,39 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* Custom Scrollbar for Cockpit */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.9);
+  border-left: 1px solid rgba(0, 255, 65, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 65, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 65, 0.45);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+}
+
+/* Custom Cursor class for screen size matching */
+@media (min-width: 769px) {
+  html, body, a, button, [role='button'], input, textarea, select, [data-cursor] {
+    cursor: none !important;
+  }
+}
+
+/* Marquee Animation Keyframes */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+

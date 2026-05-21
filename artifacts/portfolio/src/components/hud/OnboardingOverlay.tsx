@@ -49,16 +49,17 @@ export default function OnboardingOverlay() {
             {/* Pilot welcome */}
             <div className="text-amber-400 font-bold text-lg mb-1">Welcome, Pilot.</div>
             <div className="text-green-400/80 text-xs mb-6 leading-relaxed">
-              You are now in control of KTP-01's mission cockpit. Navigate using the control panel below.
+              You are now in control of KTP-01's mission cockpit. Experience a fully interactive vertical scrolling flight simulation.
             </div>
 
             {/* Steps */}
             <div className="space-y-3 mb-8">
               {[
-                { icon: "▼", label: "BOTTOM PANEL", desc: "Click any cockpit button to open a mission section" },
-                { icon: "►", label: "SIDE PANEL", desc: "Mission data loads on the right side of your display" },
-                { icon: "◉", label: "COMM PANEL", desc: "Use COMM to contact, download resume & connect" },
+                { icon: "⇳", label: "SMOOTH SCROLL", desc: "Scroll vertically to pilot through mission sections and trigger HUD telemetry rotations" },
+                { icon: "🎯", label: "TARGETING CURSOR", desc: "Hover over interactive controls to engage magnetic attraction and HUD targeting" },
+                { icon: "⚡", label: "NAV HUD", desc: "Use the right HUD sidebar (or bottom pill on mobile) to warp directly between coordinates" },
               ].map((step, i) => (
+
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -10 }}
