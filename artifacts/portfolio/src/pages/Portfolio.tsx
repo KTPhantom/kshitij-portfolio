@@ -5,6 +5,7 @@ import CockpitScene from "@/components/scenes/CockpitScene";
 import HUDOverlay from "@/components/hud/HUDOverlay";
 import SectionPanel from "@/components/hud/SectionPanel";
 import CockpitDashboard from "@/components/hud/CockpitDashboard";
+import OnboardingOverlay from "@/components/hud/OnboardingOverlay";
 import ScanLine from "@/components/ui/ScanLine";
 
 export default function Portfolio() {
@@ -24,6 +25,7 @@ export default function Portfolio() {
           <HUDOverlay />
           <SectionPanel />
           <CockpitDashboard />
+          <OnboardingOverlay />
         </>
       )}
 

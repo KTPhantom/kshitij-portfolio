@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useCockpitStore } from "@/store/useCockpitStore";
 import { portfolio } from "@/data/portfolio";
-import { Code, Layers, Database, Settings, Cloud, Brain, Mail, Phone, Linkedin, Github, Copy } from "lucide-react";
+import { Code, Layers, Database, Settings, Cloud, Brain, Mail, Phone, Linkedin, Github, Copy, Download, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const icons: Record<string, any> = {
@@ -113,6 +113,29 @@ export default function SectionPanel() {
                       <span key={i} className="text-[10px] text-muted-foreground">[{t}]</span>
                     ))}
                   </div>
+                  {/* Links */}
+                  <div className="flex gap-2 pt-1">
+                    {(proj as any).githubUrl && (
+                      <a
+                        href={(proj as any).githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-[10px] px-2 py-1 border border-green-500/30 bg-green-900/10 text-green-400 hover:bg-green-900/30 transition-colors"
+                      >
+                        <Github className="w-3 h-3" /> CODE
+                      </a>
+                    )}
+                    {(proj as any).liveUrl && (
+                      <a
+                        href={(proj as any).liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-[10px] px-2 py-1 border border-cyan-500/30 bg-cyan-900/10 text-cyan-400 hover:bg-cyan-900/30 transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" /> LIVE
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -160,6 +183,21 @@ export default function SectionPanel() {
               <div className="text-sm text-foreground mb-4">ESTABLISH COMM LINK...</div>
               
               <div className="space-y-4">
+                {/* Resume download — top priority CTA */}
+                <a
+                  href={portfolio.contact.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-3 border border-amber-500/60 bg-amber-900/20 hover:bg-amber-900/40 transition-colors"
+                >
+                  <Download className="w-5 h-5 text-amber-400" />
+                  <div className="flex-1">
+                    <div className="text-xs text-amber-400 tracking-widest">MISSION DOSSIER</div>
+                    <div className="text-sm text-foreground font-bold">Download Resume</div>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-amber-400/60" />
+                </a>
+
                 <div className="flex items-center gap-4 p-3 border border-blue-500/30 bg-blue-900/10 cursor-pointer hover:bg-blue-900/30 transition-colors" onClick={() => handleCopy(portfolio.contact.email)}>
                   <Mail className="w-5 h-5 text-blue-400" />
                   <div className="flex-1">

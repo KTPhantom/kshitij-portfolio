@@ -16,6 +16,7 @@ export const portfolio = {
     github: "github.com/KTPhantom",
     githubUrl: "https://github.com/KTPhantom",
     location: "Bhopal, India",
+    resumeUrl: "https://drive.google.com/file/d/YOUR_RESUME_FILE_ID/view",
   },
 
   education: {
@@ -87,6 +88,8 @@ export const portfolio = {
       ],
       stats: { accuracy: 87, images: 6000, latency: 300, categories: 12 },
       status: "DEPLOYED",
+      githubUrl: "https://github.com/KTPhantom",
+      liveUrl: "",
     },
     {
       id: "proj-2",
@@ -104,6 +107,8 @@ export const portfolio = {
       ],
       stats: { drivers: 20, features: 50, accuracy: 94 },
       status: "COMPLETE",
+      githubUrl: "https://github.com/KTPhantom",
+      liveUrl: "",
     },
     {
       id: "proj-3",
