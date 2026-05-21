@@ -52,9 +52,10 @@ export default function ProjectsSection() {
       scrollTrigger: {
         trigger: container,
         pin: true,
+        pinSpacing: true,
         scrub: 0.8,
         start: "top top",
-        end: () => `+=${scrollSection.scrollWidth}`,
+        end: () => `+=${scrollWidth}`,
         invalidateOnRefresh: true,
       },
     });

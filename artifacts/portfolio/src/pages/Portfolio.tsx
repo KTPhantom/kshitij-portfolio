@@ -1,4 +1,7 @@
+import { useEffect } from "react";
 import { useCockpitStore } from "@/store/useCockpitStore";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BootSequence from "@/components/hud/BootSequence";
 import CockpitBackground from "@/components/hud/CockpitBackground";
 import CockpitScene from "@/components/scenes/CockpitScene";
@@ -17,8 +20,21 @@ import ExperienceSection from "@/components/sections/ExperienceSection";
 import CertificationsSection from "@/components/sections/CertificationsSection";
 import ContactSection from "@/components/sections/ContactSection";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Portfolio() {
   const { isBooting } = useCockpitStore();
+
+  useEffect(() => {
+    if (isBooting) return;
+
+    // Wait for React rendering & DOM styling to settle, then refresh ScrollTrigger
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+    
+    return () => clearTimeout(timer);
+  }, [isBooting]);
 
   return (
     <SmoothScrollProvider>
@@ -43,9 +59,9 @@ export default function Portfolio() {
           </>
         )}
 
-        {/* Scrollable content layer */}
+        {/* Scrollable content layer (block container instead of flexbox to prevent ScrollTrigger pinSpacing issues) */}
         {!isBooting && (
-          <div className="relative z-20 w-full flex flex-col items-center">
+          <div className="relative z-20 w-full">
             <HeroSection />
             <StatsSection />
             <SkillsSection />
