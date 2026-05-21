@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useCockpitStore } from "@/store/useCockpitStore";
 import { portfolio } from "@/data/portfolio";
@@ -74,24 +74,35 @@ function RadarDisplay() {
 }
 
 function AltitudeTape({ value }: { value: number }) {
+  const centerValue = Math.round(value / 1000) * 1000;
+  const offset = ((value - centerValue) / 1000) * -14;
   const ticks = [-3, -2, -1, 0, 1, 2, 3];
+
   return (
     <div className="flex flex-col items-end gap-0">
       <div className="text-[8px] font-mono text-green-500/50 mb-1">ALT FT</div>
       <div className="relative w-14 border border-green-500/20 bg-black/40 overflow-hidden" style={{ height: 100 }}>
-        {ticks.map((t) => (
-          <div
-            key={t}
-            className="absolute right-0 flex items-center gap-1 w-full"
-            style={{ top: `${50 + t * -14}%`, transform: "translateY(-50%)" }}
-          >
-            <div className={`flex-1 h-px ${t === 0 ? "bg-amber-400" : "bg-green-500/20"}`} />
-            <div className={`text-[7px] font-mono pr-1 ${t === 0 ? "text-amber-400" : "text-green-500/40"}`}>
-              {((value + t * 1000) / 1000).toFixed(0)}K
-            </div>
-          </div>
-        ))}
-        {/* Indicator */}
+        <div
+          className="absolute inset-0 transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          {ticks.map((t) => {
+            const tickVal = centerValue + t * 1000;
+            const isClosest = Math.abs(value - tickVal) < 500;
+            return (
+              <div
+                key={t}
+                className="absolute right-0 flex items-center gap-1 w-full"
+                style={{ top: `${50 + t * -14}%`, transform: "translateY(-50%)" }}
+              >
+                <div className={`flex-1 h-px ${isClosest ? "bg-amber-400" : "bg-green-500/20"}`} />
+                <div className={`text-[7px] font-mono pr-1 ${isClosest ? "text-amber-400 font-bold" : "text-green-500/40"}`}>
+                  {(tickVal / 1000).toFixed(0)}K
+                </div>
+              </div>
+            );
+          })}
+        </div>
         <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-amber-400" />
         <div className="absolute right-0 top-1/2 -translate-y-1/2 border-l-4 border-y-4 border-l-amber-400 border-y-transparent w-0 h-0" />
       </div>
@@ -101,23 +112,35 @@ function AltitudeTape({ value }: { value: number }) {
 }
 
 function SpeedTape({ value }: { value: number }) {
+  const centerValue = Math.round(value / 50) * 50;
+  const offset = ((value - centerValue) / 50) * -14;
   const ticks = [-3, -2, -1, 0, 1, 2, 3];
+
   return (
     <div className="flex flex-col items-start gap-0">
       <div className="text-[8px] font-mono text-cyan-500/50 mb-1">SPD KTS</div>
       <div className="relative w-14 border border-cyan-500/20 bg-black/40 overflow-hidden" style={{ height: 100 }}>
-        {ticks.map((t) => (
-          <div
-            key={t}
-            className="absolute left-0 flex items-center gap-1 w-full"
-            style={{ top: `${50 + t * -14}%`, transform: "translateY(-50%)" }}
-          >
-            <div className={`text-[7px] font-mono pl-1 ${t === 0 ? "text-cyan-400" : "text-cyan-500/40"}`}>
-              {value + t * 50}
-            </div>
-            <div className={`flex-1 h-px ${t === 0 ? "bg-cyan-400" : "bg-cyan-500/20"}`} />
-          </div>
-        ))}
+        <div
+          className="absolute inset-0 transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          {ticks.map((t) => {
+            const tickVal = centerValue + t * 50;
+            const isClosest = Math.abs(value - tickVal) < 25;
+            return (
+              <div
+                key={t}
+                className="absolute left-0 flex items-center gap-1 w-full"
+                style={{ top: `${50 + t * -14}%`, transform: "translateY(-50%)" }}
+              >
+                <div className={`text-[7px] font-mono pl-1 ${isClosest ? "text-cyan-400 font-bold" : "text-cyan-500/40"}`}>
+                  {tickVal}
+                </div>
+                <div className={`flex-1 h-px ${isClosest ? "bg-cyan-400" : "bg-cyan-500/20"}`} />
+              </div>
+            );
+          })}
+        </div>
         <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-cyan-400" />
         <div className="absolute left-0 top-1/2 -translate-y-1/2 border-r-4 border-y-4 border-r-cyan-400 border-y-transparent w-0 h-0" />
       </div>
@@ -126,14 +149,8 @@ function SpeedTape({ value }: { value: number }) {
   );
 }
 
-function HeadingTape() {
-  const [heading, setHeading] = useState(275);
-  useEffect(() => {
-    const t = setInterval(() => setHeading((h) => (h + 0.05) % 360), 100);
-    return () => clearInterval(t);
-  }, []);
-
-  const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+function HeadingTape({ heading }: { heading: number }) {
+  const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="text-[8px] font-mono text-green-500/50">HDG</div>
@@ -142,9 +159,9 @@ function HeadingTape() {
           className="absolute top-0 bottom-0 flex items-center"
           style={{
             left: "50%",
-            transform: `translateX(calc(-50% - ${(heading % 360) * 0.4}px))`,
-            transition: "transform 0.1s linear",
-            width: "800px",
+            transform: `translateX(calc(-50% - ${(heading % 360) * 4}px))`,
+            transition: "transform 0.05s ease-out",
+            width: "1480px",
           }}
         >
           {Array.from({ length: 37 }).map((_, i) => {
@@ -165,7 +182,6 @@ function HeadingTape() {
             );
           })}
         </div>
-        {/* Center marker */}
         <div className="absolute left-1/2 bottom-0 -translate-x-1/2 border-x-4 border-t-4 border-x-transparent border-t-amber-400 w-0 h-0" />
       </div>
       <div className="text-[10px] font-mono text-amber-400">{Math.round(heading).toString().padStart(3, "0")}°</div>
@@ -173,23 +189,28 @@ function HeadingTape() {
   );
 }
 
-function ArtificialHorizon() {
+function ArtificialHorizon({ pitch, roll }: { pitch: number; roll: number }) {
   return (
     <div className="relative w-24 h-24 rounded-full overflow-hidden border border-green-500/30 bg-black/50">
-      {/* Sky */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#001a2e] to-[#002a1a]" />
-      {/* Ground */}
-      <div className="absolute left-0 right-0 bottom-0 h-1/2 bg-gradient-to-b from-[#1a0e00] to-[#0d0800]" />
-      {/* Horizon line */}
-      <div className="absolute left-0 right-0 top-1/2 h-px bg-amber-400/80 -translate-y-1/2" />
-      {/* Pitch ladder */}
-      {[-1, 1].map((s) => (
-        <div
-          key={s}
-          className="absolute left-1/4 right-1/4 h-px bg-white/20"
-          style={{ top: `calc(50% + ${s * 14}px)` }}
-        />
-      ))}
+      <div
+        className="absolute inset-0 transition-transform duration-100 ease-out"
+        style={{
+          transform: `rotate(${roll}deg) translateY(${pitch}px)`
+        }}
+      >
+        {/* Sky */}
+        <div className="absolute -inset-10 bg-gradient-to-b from-[#001a2e] to-[#002a1a]" />
+        {/* Ground */}
+        <div className="absolute left-[-40px] right-[-40px] top-1/2 bottom-[-40px] bg-gradient-to-b from-[#1a0e00] to-[#0d0800] border-t border-amber-400/80" />
+        {/* Pitch ladder */}
+        {[-1, 1].map((s) => (
+          <div
+            key={s}
+            className="absolute left-1/4 right-1/4 h-px bg-white/20"
+            style={{ top: `calc(50% + ${s * 14}px)` }}
+          />
+        ))}
+      </div>
       {/* Aircraft symbol */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-12 h-1">
@@ -212,6 +233,98 @@ export default function HUDOverlay() {
   const cockpitLabel =
     Object.entries(portfolio.cockpitMap).find(([_, sec]) => sec === activeSection)?.[0] ||
     "SYSTEM ACTIVE";
+
+  // Dynamic values driven by scroll and mouse cursor
+  const targets = useRef({
+    altitude: 15000,
+    speed: 1200,
+    heading: 275,
+    pitch: 0,
+    roll: 0,
+    scrollProgress: 0,
+    mouseX: 0,
+    mouseY: 0
+  });
+
+  const [metrics, setMetrics] = useState({
+    altitude: 15000,
+    speed: 1200,
+    heading: 275,
+    pitch: 0,
+    roll: 0
+  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
+      targets.current.scrollProgress = progress;
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const mx = (e.clientX / window.innerWidth) * 2 - 1;
+      const my = (e.clientY / window.innerHeight) * 2 - 1;
+      targets.current.mouseX = mx;
+      targets.current.mouseY = my;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    
+    const update = () => {
+      if (!active) return;
+      
+      const p = targets.current.scrollProgress;
+      const mx = targets.current.mouseX;
+      const my = targets.current.mouseY;
+      
+      const targetAlt = 15000 + p * 25000 - my * 1200;
+      const targetSpd = 1200 + p * 800 - my * 80 + Math.sin(Date.now() / 400) * 3;
+      const targetHdg = 275 + p * 360 + mx * 25;
+      const targetPitch = -my * 20;
+      const targetRoll = mx * 25;
+      
+      setMetrics((prev) => {
+        const lerp = (start: number, end: number, amt: number) => {
+          return start + (end - start) * amt;
+        };
+        
+        const lerpHeading = (start: number, end: number, amt: number) => {
+          let diff = end - start;
+          while (diff < -180) diff += 360;
+          while (diff > 180) diff -= 360;
+          return (start + diff * amt + 360) % 360;
+        };
+        
+        return {
+          altitude: Math.round(lerp(prev.altitude, targetAlt, 0.08)),
+          speed: Math.round(lerp(prev.speed, targetSpd, 0.08)),
+          heading: lerpHeading(prev.heading, targetHdg, 0.08),
+          pitch: lerp(prev.pitch, targetPitch, 0.1),
+          roll: lerp(prev.roll, targetRoll, 0.1)
+        };
+      });
+      
+      requestAnimationFrame(update);
+    };
+    
+    requestAnimationFrame(update);
+    
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
@@ -251,7 +364,7 @@ export default function HUDOverlay() {
         <div className="flex items-center gap-4 text-[10px] text-green-500/70 text-right">
           <span>{time}</span>
           <span>27.4°N 77.6°E</span>
-          <span className="text-cyan-400">MACH 2.1</span>
+          <span className="text-cyan-400">MACH {(metrics.speed / 700).toFixed(2)}</span>
         </div>
       </motion.div>
 
@@ -263,8 +376,8 @@ export default function HUDOverlay() {
         className="absolute hidden lg:flex flex-col gap-6 items-start"
         style={{ left: "14%", top: "15%" }}
       >
-        <SpeedTape value={1470} />
-        <ArtificialHorizon />
+        <SpeedTape value={metrics.speed} />
+        <ArtificialHorizon pitch={metrics.pitch} roll={metrics.roll} />
       </motion.div>
 
       {/* ═══ RIGHT SIDE ─ Altitude tape + radar ═══ */}
@@ -275,7 +388,7 @@ export default function HUDOverlay() {
         className="absolute hidden lg:flex flex-col gap-6 items-end"
         style={{ right: "14%", top: "15%" }}
       >
-        <AltitudeTape value={35000} />
+        <AltitudeTape value={metrics.altitude} />
         <RadarDisplay />
       </motion.div>
 
@@ -287,7 +400,7 @@ export default function HUDOverlay() {
         className="absolute left-1/2 -translate-x-1/2 hidden md:block"
         style={{ top: "10%" }}
       >
-        <HeadingTape />
+        <HeadingTape heading={metrics.heading} />
       </motion.div>
 
       {/* ═══ CENTER ─ Targeting reticle ═══ */}
