@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import TextReveal from "@/components/ui/TextReveal";
+import HUDHalo from "@/components/ui/HUDHalo";
 
 export default function StatsSection() {
   const statsDef = [
@@ -14,7 +15,8 @@ export default function StatsSection() {
   ];
 
   return (
-    <section id="stats" className="min-h-[60vh] w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+    <section id="stats" className="relative min-h-[60vh] w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+      <HUDHalo color="green" />
       <div className="max-w-4xl w-full space-y-10 z-10 pointer-events-auto">
         
         {/* Section Title */}

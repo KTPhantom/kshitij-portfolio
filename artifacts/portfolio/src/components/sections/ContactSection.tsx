@@ -4,6 +4,7 @@ import TextReveal from "@/components/ui/TextReveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, Linkedin, Github, Copy, Download, ExternalLink } from "lucide-react";
+import HUDHalo from "@/components/ui/HUDHalo";
 
 export default function ContactSection() {
   const { toast } = useToast();
@@ -17,7 +18,8 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="min-h-screen w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+    <section id="contact" className="relative min-h-screen w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+      <HUDHalo color="cyan" />
       <div className="max-w-md w-full space-y-6 z-10 pointer-events-auto">
         
         {/* Section Title */}

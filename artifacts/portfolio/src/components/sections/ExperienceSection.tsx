@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
 import TextReveal from "@/components/ui/TextReveal";
+import HUDHalo from "@/components/ui/HUDHalo";
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="min-h-screen w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+    <section id="experience" className="relative min-h-screen w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+      <HUDHalo color="amber" />
       <div className="max-w-3xl w-full space-y-10 z-10 pointer-events-auto">
         
         {/* Section Title */}

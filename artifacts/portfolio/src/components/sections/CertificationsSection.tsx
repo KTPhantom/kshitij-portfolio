@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
 import TextReveal from "@/components/ui/TextReveal";
+import HUDHalo from "@/components/ui/HUDHalo";
 
 export default function CertificationsSection() {
   return (
-    <section id="certifications" className="min-h-[50vh] w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+    <section id="certifications" className="relative min-h-[50vh] w-full flex flex-col justify-center items-center py-16 px-6 md:px-12 pointer-events-none select-none">
+      <HUDHalo color="purple" />
       <div className="max-w-3xl w-full space-y-8 z-10 pointer-events-auto">
         
         {/* Section Title */}

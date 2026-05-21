@@ -3,6 +3,7 @@ import { portfolio } from "@/data/portfolio";
 import TextReveal from "@/components/ui/TextReveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { ArrowDown } from "lucide-react";
+import HUDHalo from "@/components/ui/HUDHalo";
 
 export default function HeroSection() {
   const handleEngage = () => {
@@ -17,6 +18,7 @@ export default function HeroSection() {
       id="hero"
       className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 md:px-12 pointer-events-none select-none"
     >
+      <HUDHalo color="green" />
       <div className="max-w-4xl w-full text-center space-y-6 z-10 pointer-events-auto mt-[-40px] md:mt-0">
         {/* Callsign & Mission Status header */}
         <div className="flex justify-center items-center gap-3 text-green-500/80 font-mono text-[10px] md:text-xs tracking-[0.25em]">
